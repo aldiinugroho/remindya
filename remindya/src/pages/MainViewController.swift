@@ -114,6 +114,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TableRegisteredEventCell.reusableId, for: indexPath) as! TableRegisteredEventCell
         cell.selectionStyle = .none
+        cell.buttonTapCallback = {
+            self.tappedSelectedRow()
+        }
         return cell
     }
     
@@ -127,6 +130,11 @@ extension MainViewController {
     @objc private func tappedCreateNew(_ sender: UIButton) {
         let newElement = BuilderModel(time: "22.30", dayornight: "AM")
         registerDataEvent.append(newElement)
+        tableView.reloadData()
+    }
+    
+    private func tappedSelectedRow() {
+        registerDataEvent.remove(at: 0)
         tableView.reloadData()
     }
 }

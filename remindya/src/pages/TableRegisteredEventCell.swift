@@ -77,6 +77,6 @@ extension TableRegisteredEventCell {
 
 extension TableRegisteredEventCell {
     @objc private func tappedCancel(_ sender: UIButton) {
-        print("canceled")
+        buttonTapCallback()
     }
 }
