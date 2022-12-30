@@ -16,10 +16,8 @@ class MainViewController: UIViewController {
     }
     
     // MARK: - sample data
-    let datasample: [BuilderModel] = [
-        BuilderModel(time: "18.30", dayornight: "PM"),
-        BuilderModel(time: "19.30", dayornight: "PM"),
-        BuilderModel(time: "22.30", dayornight: "PM")
+    var registerDataEvent: [BuilderModel] = [
+        BuilderModel(time: "00.00", dayornight: "AM")
     ]
     
     // MARK: - declaration
@@ -49,6 +47,7 @@ class MainViewController: UIViewController {
     
     let tableView: UITableView = {
         let table = UITableView()
+        table.backgroundColor = UIColor.customcolor.appcolor
         return table
     }()
 
@@ -65,13 +64,16 @@ class MainViewController: UIViewController {
 extension MainViewController {
     // MARK: - setup
     private func setup() {
+        view.addSubview(mainEventbanner)
         view.addSubview(btnCreateNewEvent)
+        btnCreateNewEvent.addTarget(self, action: #selector(tappedCreateNew), for: .touchUpInside)
+        
         setuptableview()
     }
     
     private func setuptableview() {
         view.addSubview(tableView)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "haha")
+        tableView.register(TableRegisteredEventCell.self, forCellReuseIdentifier: TableRegisteredEventCell.reusableId)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -79,6 +81,13 @@ extension MainViewController {
     
     // MARK: - layout
     private func layout() {
+        // mainEventbanner
+        NSLayoutConstraint.activate([
+            mainEventbanner.topAnchor.constraint(equalToSystemSpacingBelow: view.topAnchor, multiplier: 10),
+            mainEventbanner.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 2),
+            view.trailingAnchor.constraint(equalToSystemSpacingAfter: mainEventbanner.trailingAnchor, multiplier: 2)
+        ])
+        
         // btnCreateNewEvent
         NSLayoutConstraint.activate([
             btnCreateNewEvent.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -88,7 +97,7 @@ extension MainViewController {
 
         // tableView
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.topAnchor.constraint(equalToSystemSpacingBelow: mainEventbanner.bottomAnchor, multiplier: 2),
             tableView.bottomAnchor.constraint(equalTo: btnCreateNewEvent.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
@@ -96,14 +105,28 @@ extension MainViewController {
     }
 }
 
+    // MARK: - tableview extension
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return registerDataEvent.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: TableRegisteredEventCell.reusableId, for: indexPath) as! TableRegisteredEventCell
+        cell.selectionStyle = .none
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }
 
+    // MARK: - tableview extension
+extension MainViewController {
+    @objc private func tappedCreateNew(_ sender: UIButton) {
+        let newElement = BuilderModel(time: "22.30", dayornight: "AM")
+        registerDataEvent.append(newElement)
+        tableView.reloadData()
+    }
+}

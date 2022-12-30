@@ -14,6 +14,7 @@ extension UIColor {
         static var lightblue: UIColor { return UIColor(named: "Lightblue")! }
         static var blueeventtime: UIColor { return UIColor(named: "BlueEventTime")! }
         static var bluedarkbtn: UIColor { return UIColor(named: "BlueDarkBtn")! }
+        static var redcancelbtn: UIColor { return UIColor(named: "RedCancelBtn")! }
     }
 }
 
